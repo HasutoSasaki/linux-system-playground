@@ -1,80 +1,60 @@
-# Docker Ubuntu 環境の管理
+# strace でシステムコールを比較するサンプル
 
-## 初回セットアップ
+各言語（C / Go / Rust / Python / Node.js）で Hello World を書き、strace でシステムコールを比較するための環境です。
 
-```bash
-# Ubuntu 20.04コンテナを作成して起動
-docker run -it --name linux-study ubuntu:20.04 bash
-
-# コンテナ内で必要なパッケージをインストール
-apt update
-apt install -y strace vim curl wget git
-```
-
-## 日常的な操作
-
-### コンテナの起動・停止
+## セットアップ
 
 ```bash
-# コンテナを起動
-docker start linux-study
+# イメージをビルド
+docker build -t linux-study .
 
-# コンテナに接続
-docker exec -it linux-study bash
-
-# コンテナから抜ける（コンテナは起動したまま）
-exit
-
-# コンテナを停止
-docker stop linux-study
+# コンテナを起動（カレントディレクトリをマウント）
+docker run -it -v $(pwd):/workspace linux-study
 ```
 
-### コンテナの状態確認
+## ビルド
 
 ```bash
-# 起動中のコンテナ一覧
-docker ps
+# C
+gcc c/hello.c -o bin/hello_c
 
-# すべてのコンテナ一覧（停止中も含む）
-docker ps -a
+# Go
+go build -o bin/hello_go go/hello.go
 
-# コンテナの詳細情報
-docker inspect linux-study
+# Rust
+rustc rust/hello.rs -o bin/hello_rust
 ```
 
-## ファイルのやり取り
+Python と Node.js はビルド不要です。
+
+## strace で比較
+
+### 統計データを見る
 
 ```bash
-# ホスト → コンテナ
-docker cp ./local-file.txt linux-study:/root/
-
-# コンテナ → ホスト
-docker cp linux-study:/root/remote-file.txt ./
+strace -c ./bin/hello_c > /dev/null
+strace -c ./bin/hello_go > /dev/null
+strace -c ./bin/hello_rust > /dev/null
+strace -c python3 python/hello.py > /dev/null
+strace -c node node/hello.js > /dev/null
 ```
 
-## クリーンアップ
+### write システムコールを見る
 
 ```bash
-# コンテナを削除（停止してから）
-docker stop linux-study
-docker rm linux-study
-
-# イメージも削除する場合
-docker rmi ubuntu:20.04
+strace -e write ./bin/hello_c > /dev/null
+strace -e write ./bin/hello_go > /dev/null
+strace -e write ./bin/hello_rust > /dev/null
+strace -e write python3 python/hello.py > /dev/null
+strace -e write node node/hello.js > /dev/null
 ```
 
-## 再作成する場合
+## 環境
 
-```bash
-# 古いコンテナを削除
-docker rm -f linux-study
-
-# 新しいコンテナを作成
-docker run -it --name linux-study ubuntu:20.04 bash
-```
-
-## Tips
-
-- コンテナ内の変更は保持されるので、一度インストールしたパッケージは再起動後も使える
-- コンテナを削除すると、内部のデータはすべて消える
-- 重要なデータは `docker cp` でホストに保存しておく
+| 項目 | バージョン |
+|------|-----------|
+| OS | Ubuntu 24.04 |
+| Go | 1.24.0 |
+| Rust | 最新（rustup経由） |
+| Python | 3.14 |
+| Node.js | 24.x |
