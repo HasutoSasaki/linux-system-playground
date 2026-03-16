@@ -2,6 +2,14 @@
 
 各言語（C / Go / Rust / Python / Node.js）で Hello World を書き、strace でシステムコールを比較するための環境です。
 
+## colima を使用している場合
+
+colima を起動
+
+```bash
+colima start
+```
+
 ## セットアップ
 
 ```bash
@@ -10,6 +18,28 @@ docker build -t linux-study .
 
 # コンテナを起動（カレントディレクトリをマウント）
 docker run -it -v $(pwd):/workspace linux-study
+```
+
+## Docker 操作
+
+```bash
+# コンテナから抜ける（コンテナは停止）
+exit
+
+# 起動中のコンテナを確認
+docker ps
+
+# 停止中のコンテナも含めて確認
+docker ps -a
+
+# 停止中のコンテナに再度入る
+docker start -ai <コンテナID>
+
+# 起動中のコンテナに入る（別ターミナルから）
+docker exec -it <コンテナID> bash
+
+# コンテナを削除
+docker rm <コンテナID>
 ```
 
 ## ビルド
@@ -51,10 +81,10 @@ strace -e write node node/hello.js > /dev/null
 
 ## 環境
 
-| 項目 | バージョン |
-|------|-----------|
-| OS | Ubuntu 24.04 |
-| Go | 1.24.0 |
-| Rust | 最新（rustup経由） |
-| Python | 3.14 |
-| Node.js | 24.x |
+| 項目    | バージョン         |
+| ------- | ------------------ |
+| OS      | Ubuntu 24.04       |
+| Go      | 1.24.0             |
+| Rust    | 最新（rustup経由） |
+| Python  | 3.14               |
+| Node.js | 24.x               |

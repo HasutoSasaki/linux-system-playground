@@ -8,3 +8,7 @@ pause
 # Temporary
 results
 bin
+nm_output.txt
+
+# Local config
+.mcp.json

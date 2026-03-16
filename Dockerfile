@@ -6,6 +6,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt update && apt install -y \
     binutils \
     build-essential \
+    file \
     curl \
     wget \
     ca-certificates \
@@ -18,10 +19,10 @@ RUN apt update && apt install -y \
     vim \
     && rm -rf /var/lib/apt/lists/*
 
-# Go 1.24 のインストール
-RUN wget https://go.dev/dl/go1.24.0.linux-amd64.tar.gz && \
-    tar -C /usr/local -xzf go1.24.0.linux-amd64.tar.gz && \
-    rm go1.24.0.linux-amd64.tar.gz
+# Go 1.26 のインストール
+RUN wget https://go.dev/dl/go1.26.0.linux-arm64.tar.gz && \
+    tar -C /usr/local -xzf go1.26.0.linux-arm64.tar.gz && \
+    rm go1.26.0.linux-arm64.tar.gz
 ENV PATH=$PATH:/usr/local/go/bin
 
 # Rust のインストール
