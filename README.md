@@ -18,6 +18,9 @@ docker build -t linux-study .
 
 # コンテナを起動（カレントディレクトリをマウント）
 docker run -it -v $(pwd):/workspace linux-study
+
+# ポートを指定
+docker run -it -p 8080:8080 -v $(pwd):/workspace linux-study
 ```
 
 ## Docker 操作
