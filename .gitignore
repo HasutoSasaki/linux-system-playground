@@ -10,5 +10,8 @@ results
 bin
 nm_output.txt
 
+# Trace
+trace.out
+
 # Local config
 .mcp.json
